@@ -25,12 +25,23 @@ const program = new Command()
     },
     30003
   )
+  .option(
+    '--ttl <seconds>',
+    'Seconds to keep aircraft data in Redis',
+    value => {
+      const ttl = parseInt(value, 10)
+      if (isNaN(ttl)) throw new Error('TTL must be a number')
+      return ttl
+    },
+    300
+  )
   .parse()
 
 /* Get the program options */
 const redisUrl: string = program.opts().redis
 const sbs1Host: string = program.opts().host
 const sbs1Port: number = program.opts().port
+const ttl: number = program.opts().ttl
 
 /* Connect to Redis */
 const redis = await createRedisClient({ url: redisUrl })
@@ -69,7 +80,7 @@ function processMessage(message: SBS1_Message) {
   /* Write the JSON to Redis with an expiration of 5 minutes */
   const key = `aircraft:${json.icaoId}`
   redis.json.merge(key, '.', json)
-  redis.expire(key, 300)
+  redis.expire(key, ttl)
 
   /* Log the message */
   console.log(chalk.green('Added aircraft to Redis:'), json.icaoId)
@@ -77,8 +88,6 @@ function processMessage(message: SBS1_Message) {
 
 function toEpochMilliseconds(dateString: string, timeString: string): number {
   if (!dateString || !timeString) return 0
-
-  const offset = new Date().getTimezoneOffset() * 60 * 1000
   const date = new Date(`${dateString.replaceAll('/', '-')}T${timeString}`)
-  return date.getTime() - offset
+  return date.getTime()
 }
