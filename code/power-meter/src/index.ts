@@ -1,5 +1,6 @@
 #! /usr/bin/env node
 
+import chalk from 'chalk'
 import { Command } from 'commander'
 import { createInterface } from 'readline'
 import { createClient } from 'redis'
@@ -39,7 +40,7 @@ async function main() {
 
 /* Process a single line of power inputs */
 async function processLine(line: string) {
-  console.log(`Processing line: ${line}`)
+  console.log(chalk.yellow('Processing line'), line)
   /* Yield signal values from the line */
   for (const signalValue of yieldSignalValues(line)) {
     /* Get the values from the signal value */
@@ -57,7 +58,7 @@ async function processLine(line: string) {
     })
 
     /* Log that we did a thing */
-    console.log(`Writing to ${key} at ${timestamp} with power ${signalStrength}`)
+    console.log(`Writing to ${chalk.green(key)} at ${chalk.blue(timestamp)} with power ${chalk.red(signalStrength)}`)
   }
 }
 

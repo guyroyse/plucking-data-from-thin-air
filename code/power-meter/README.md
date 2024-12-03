@@ -7,10 +7,10 @@ npm install
 npm run build
 ```
 
-This will transpile and install the power-meter tool globaly on you system. To run it you need to run `rtl_power` and pipe the output into `power-meter`:
+This will transpile and install the power-meter tool globaly on your system. To run it you need to run `rtl_power` and pipe the output into `power-meter`:
 
 ```bash
-rtl_power -f 88M:108M:25k -i 1 | power-meter
+rtl_power -f 88M:108M:100k -i 1 | power-meter
 ```
 
 The `-f` flag of `rtl_power` specifies the frequency range and interval in the format:
