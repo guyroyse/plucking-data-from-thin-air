@@ -1,70 +1,76 @@
 import * as d3 from 'd3'
 
 type PowerEntry = {
-  freq: number
+  time: number
+  frequency: number
   power: number
 }
 
-// Declare the chart dimensions and margins.
-const width = 1800
-const height = 900
-const marginTop = 20
-const marginRight = 100
-const marginBottom = 30
-const marginLeft = 100
+/* Declare the chart dimensions and margins */
+const dimensions = { width: 1600, height: 900 }
+const margin = { top: 0, right: 50, bottom: 50, left: 50 }
+const width = dimensions.width - margin.left - margin.right
+const height = dimensions.height - margin.top - margin.bottom
 
-// Declare the x (horizontal position) scale.
-const x = d3.scaleLinear().range([marginLeft, width - marginRight])
+/* Create the SVG container */
+const svg = d3
+  .select('#container')
+  .append('svg')
+  .attr('width', dimensions.width)
+  .attr('height', dimensions.height)
+  .append('g')
+  .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
-// Declare the y (vertical position) scale.
-const y = d3.scaleLinear().range([height - marginBottom, marginTop])
+/* Read the data from the server */
+const data = (await d3.json('http://localhost:8080/power-meter')) as PowerEntry[]
 
-// Create the SVG container.
-const svg = d3.select('#container').append('svg').attr('width', width).attr('height', height)
+/* Get the ranges for the data */
+const minPower = d3.min(data, d => d.power) as number
+const maxPower = d3.max(data, d => d.power) as number
 
-// Define the x and y domains.
-// @ts-ignore
-x.domain([88000000, 108000000])
-y.domain([0, 25])
+const frequencies = [...new Set(data.map((entry: PowerEntry) => entry.frequency))].sort((a, b) => a - b)
+const minFrequency = d3.min(frequencies) as number
+const maxFrequency = d3.max(frequencies) as number
 
-// Add the x-axis.
-const xAxis = d3
-  .axisBottom<number>(x)
-  .ticks(40)
-  .tickSize(-height + marginTop + marginBottom)
-  .tickFormat((d: number, i: number) => (i % 2 === 0 ? `${d / 1000000} MHz` : ''))
+const seconds = [...new Set(data.map((entry: PowerEntry) => entry.time))].sort((a, b) => b - a)
 
+/* Declare the x scale for frequency */
+const xFreq = d3.scaleLinear<number>().range([0, width]).domain([minFrequency, maxFrequency])
 svg
   .append('g')
-  .attr('transform', `translate(0,${height - marginBottom})`)
-  .call(xAxis)
+  .style('font-size', 10)
+  .attr('transform', 'translate(0,' + height + ')')
+  .call(d3.axisBottom(xFreq).tickSize(5).ticks(40).tickFormat(d3.formatPrefix(',.1', 1e6)))
+  .select('.domain')
+  .remove()
 
-// Add the y-axis.
-const yAxis = d3
-  .axisLeft<number>(y)
-  .ticks(5)
-  .tickFormat((d: number) => (d === 0 ? '' : `${d} dBm`))
-svg.append('g').attr('transform', `translate(${marginLeft},0)`).call(yAxis)
+/* Declare the y scale for seconds */
+const ySeconds = d3.scaleBand<number>().range([0, height]).domain(seconds)
+svg.append('g').style('font-size', 8).call(d3.axisLeft(ySeconds).tickSize(5)).select('.domain').remove()
 
-// Create the line generator.
-const line = d3
-  .line<PowerEntry>()
-  .x(d => x(d.freq))
-  .y(d => y(d.power))
+/* Declare the color scale */
+const colorScale = d3.scaleSequential().interpolator(d3.interpolateReds).domain([minPower, maxPower])
 
-setInterval(async () => {
-  const data = await fetch('http://localhost:8080/power-meter')
-  const json: PowerEntry[] = await data.json()
-  const powerData = json.map(entry => ({ freq: entry.freq, power: Math.max(entry.power, 0) }))
+/* Draw the squares */
+drawRectangles(data)
 
-  svg.selectAll('#power-line').remove()
+function drawRectangles(data: PowerEntry[]) {
+  svg.selectAll('rect').remove()
 
   svg
-    .append('path')
-    .datum(powerData)
-    .attr('id', 'power-line')
-    .attr('fill', 'none')
-    .attr('stroke', 'steelblue')
-    .attr('stroke-width', 3)
-    .attr('d', line)
+    .selectAll()
+    .data(data, d => d!.frequency + ':' + d!.time)
+    .enter()
+    .append('rect')
+    .attr('x', d => xFreq(d.frequency))
+    .attr('y', d => ySeconds(d.time) ?? 0)
+    .attr('width', 10)
+    .attr('height', ySeconds.bandwidth())
+    .style('fill', d => colorScale(d.power))
+    .style('opacity', 1)
+}
+
+setInterval(async () => {
+  const data = (await d3.json('http://localhost:8080/power-meter')) as PowerEntry[]
+  drawRectangles(data)
 }, 1000)

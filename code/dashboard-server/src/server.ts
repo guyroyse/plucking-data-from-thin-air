@@ -21,18 +21,55 @@ app.use(function (_req, res, next) {
   next()
 })
 
-app.get('/power-meter', async (_req, res) => {
-  const data = await redis.ts.mGet('type=power')
-  const betterData = data
-    .map((item: any) => {
-      const freq = Number(item.key.split(':')[1])
-      const power = Number(item.sample.value)
-      return { freq, power }
-    })
-    .sort((a: any, b: any) => a.freq - b.freq)
-  res.json(betterData)
+app.get('/', (_req, res) => {
+  res.json({ staus: 'OK' })
 })
 
-app.listen(8080, () => {
+app.get('/power-meter', async (_req, res) => {
+  /* Get the start and stop times for the last minute */
+  const now = Math.floor(Date.now() / 1000) * 1000
+  const then = now - 1000 * 60
+
+  /* Get the data for the last minute */
+  const data = await redis.ts.mRangeWithLabels(then, now, 'type=signalStrength')
+
+  const results = data
+    .flatMap((item: any) => {
+      const frequency = Number(item.labels.frequency)
+      return item.samples.map((sample: any) => {
+        const time = Math.floor((sample.timestamp - then) / 1000)
+        const power = sample.value
+        return { time, frequency, power }
+      })
+    })
+    .sort((a: any, b: any) => {
+      return a.time - b.time || a.frequency - b.frequency
+    })
+
+  res.json(results)
+})
+
+const server = app.listen(8080, () => {
   console.log('Server is running on port 8080')
 })
+
+/* Mad hacks to get HMR working *and* to appease the TypeScript gods */
+
+interface ImportMeta {
+  hot?: {
+    on: (event: string, callback: () => void) => void
+    dispose: (callback: () => void) => void
+  }
+}
+
+const importMeta = import.meta as ImportMeta
+
+if (importMeta.hot) {
+  importMeta.hot.on('vite:beforeFullReload', () => {
+    server.close()
+  })
+
+  importMeta.hot.dispose(() => {
+    server.close()
+  })
+}
