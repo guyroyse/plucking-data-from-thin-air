@@ -1,0 +1,27 @@
+{
+  "name": "packet-watcher",
+  "version": "1.0.0",
+  "author": "Guy Royse <guy@guyroyse.com> (http://guyroyse.com/)",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "packet-watcher": "./dist/index.js"
+  },
+  "scripts": {
+    "dev": "vite-node src/index.ts",
+    "build": "tsc && npm install --global"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0",
+    "redis": "^4.7.0",
+    "utils-for-aprs": "^3.0.4"
+  },
+  "devDependencies": {
+    "@types/commander": "^2.12.0",
+    "@types/node": "^22.10.1",
+    "prettier": "^3.4.1",
+    "typescript": "^5.7.2",
+    "vite-node": "^2.1.8"
+  }
+}
