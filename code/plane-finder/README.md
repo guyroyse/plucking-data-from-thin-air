@@ -19,4 +19,4 @@ The `--net` flag turns on networking capabilities that `plane-finder` will use. 
 plane-finder --ttl 3600
 ```
 
-The `--ttl` flag sets a time-to-live for aircraft records in Redis. If no new messages are received after this amount of time, the record will be purged from Redis.
+The `--ttl` flag sets a time-to-live for aircraft records in Redis. If no new messages are received after this amount of time, the record will be purged from Redis. This is optional and defaults to 300 (i.e. 5 minutes).
