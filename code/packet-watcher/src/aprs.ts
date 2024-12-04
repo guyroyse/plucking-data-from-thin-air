@@ -1,93 +1,92 @@
+import Optional from '@guyroyse/optional'
+import { parseAX25_Addresses, AX25_AddressField } from './ax25-address'
+
+const CONTROL_FIELD = 0x03
+const PROTOCOL_ID = 0xf0
+
+enum APRS_State {
+  AX25_ADDRESSES,
+  CONTROL_FIELD,
+  PROTOCOL_ID,
+  INFORMATION_FIELD,
+  END_OF_PACKET
+}
+
+export type APRS_Information = {
+  ascii: string
+  hex: string
+  bytes: number[]
+}
+
 export type APRS_Packet = {
-  addresses: any
-  information: string
+  addresses: AX25_AddressField
+  information: APRS_Information
 }
 
 export function parseAPRS_Packet(data: Buffer): APRS_Packet {
-  const controlField = 0x03
-  const protocolId = 0xf0
-  const cfpid = Uint8Array.from([controlField, protocolId])
-  const cfpidLocation = data.indexOf(cfpid)
+  let addressField: Optional<AX25_AddressField> = Optional.empty()
+  let informationField: Optional<APRS_Information> = Optional.empty()
 
-  const addressStart = 0
-  const addressEnd = cfpidLocation
-  const infoStart = cfpidLocation + 2
-  const infoEnd = data.length
+  let index = 0
+  let state = APRS_State.AX25_ADDRESSES
 
-  const addresses = parseAddresses(data)
-  const information = data.subarray(infoStart, infoEnd).toString('ascii')
-
-  return {
-    addresses,
-    information
-  }
-}
-
-function parseAddresses(data: Buffer) {
-  const destination = parseAddress(data.subarray(0, 7))
-  if (destination.lastAddress) return { destination }
-
-  const source = parseAddress(data.subarray(7, 14))
-  if (source.lastAddress) return { destination, source }
-
-  const digipeaters = []
-  let offset = 14
-  while (true) {
-    const digipeater = parseAddress(data.subarray(offset, offset + 7))
-    digipeaters.push(digipeater)
-    offset += 7
-
-    if (digipeater.lastAddress) break
-  }
-
-  return { destination, source, digipeaters }
-}
-
-enum AddressStates {
-  CALLSIGN,
-  SSID
-}
-
-function parseAddress(data: Buffer) {
-  if (data.length !== 7) throw new Error('Address field must be 7 bytes long')
-
-  let state = AddressStates.CALLSIGN
-  let callsignBytes: number[] = []
-
-  for (const byte of data) {
-    if (state === AddressStates.CALLSIGN) {
-      state = processCallsignByte(byte, callsignBytes)
-    } else if (state === AddressStates.SSID) {
-      const { ssid, lastAddress } = processSSID_Byte(byte)
-      return {
-        callsign: Buffer.from(callsignBytes).toString('ascii').trim(),
-        ssid,
-        lastAddress
-      }
-    } else {
-      throw new Error('Invalid state')
+  while (index < data.length) {
+    switch (state) {
+      case APRS_State.AX25_ADDRESSES:
+        state = processAddressField()
+        break
+      case APRS_State.CONTROL_FIELD:
+        state = processControlField()
+        break
+      case APRS_State.PROTOCOL_ID:
+        state = processProtocolID()
+        break
+      case APRS_State.INFORMATION_FIELD:
+        state = processInformationField()
+        break
+      default:
+        throw new Error('Invalid state')
     }
   }
 
-  throw new Error('Address field did not contain SSID byte')
-}
-
-function processCallsignByte(byte: number, callsignBytes: number[]) {
-  const lastBitHigh: boolean = (byte & 0b00000001) === 0b00000001
-  if (lastBitHigh) throw new Error('Last bit high in callsign byte')
-
-  const asciiByte = byte >> 1
-  callsignBytes.push(asciiByte)
-
-  return callsignBytes.length === 6 ? AddressStates.SSID : AddressStates.CALLSIGN
-}
-
-function processSSID_Byte(byte: number) {
-  const lastBitHigh: boolean = (byte & 0b00000001) === 0b00000001
-  const ssid = (byte & 0b00011110) >> 1
-
   return {
-    ssid,
-    lastAddress: lastBitHigh
+    addresses: addressField.get(),
+    information: informationField.get()
+  }
+
+  function processAddressField(): APRS_State {
+    addressField = Optional.of(parseAX25_Addresses(index, data))
+
+    const destinationLength = 7
+    const sourceLength = 7
+    const digipeaterLength = addressField.get().digipeaters.length * 7
+    index = index + destinationLength + sourceLength + digipeaterLength
+
+    return APRS_State.CONTROL_FIELD
+  }
+
+  function processControlField(): APRS_State {
+    if (data[index] !== CONTROL_FIELD) throw new Error('Invalid control field')
+    index++
+    return APRS_State.PROTOCOL_ID
+  }
+
+  function processProtocolID(): APRS_State {
+    if (data[index] !== PROTOCOL_ID) throw new Error('Invalid protocol ID')
+    index++
+    return APRS_State.INFORMATION_FIELD
+  }
+
+  function processInformationField(): APRS_State {
+    const rawBytes = data.subarray(index)
+
+    const ascii = rawBytes.toString('ascii')
+    const hex = rawBytes.toString('hex')
+    const bytes = [...rawBytes]
+
+    informationField = Optional.of({ ascii, hex, bytes })
+
+    index = data.length
+    return APRS_State.END_OF_PACKET
   }
 }

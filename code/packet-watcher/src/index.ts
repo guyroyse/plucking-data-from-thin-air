@@ -7,6 +7,7 @@ import { Socket } from 'net'
 
 import { parseAPRS_Packet, APRS_Packet } from './aprs'
 import { parseKISS_Packet } from './kiss'
+import { AX25_Address } from './ax25-address'
 
 /* Set up the command line interface */
 const program = new Command()
@@ -50,12 +51,7 @@ socket.connect(kissPort, kissHost, () => {
   console.log(`Connected to Direwolf on ${kissHost}:${kissPort}`)
 })
 
-socket.on('data', data => {
-  const hex = data.toString('hex')
-  console.log(`Received ${data.length} bytes: ${hex}`)
-  const aprsData = parsePacket(data)
-  console.dir(aprsData, { depth: null, colors: true })
-})
+socket.on('data', handlePacket)
 
 socket.on('close', () => {})
 
@@ -65,9 +61,33 @@ socket.on('error', err => {
 
 async function main() {}
 
-function parsePacket(data: Buffer): APRS_Packet {
+function handlePacket(data: Buffer) {
+  /* Log the received data */
+  const hex = data.toString('hex')
+  console.log(`Received ${data.length} bytes: ${hex}`)
+
+  /* Parse the APRS packet */
   const dataframe = parseKISS_Packet(data)
   const packet = parseAPRS_Packet(dataframe)
 
-  return packet
+  /* Convert the packet to an object usable by a Redis event stream */
+  const event = {
+    destination: addressToString(packet.addresses.destination),
+    source: addressToString(packet.addresses.source),
+    digipeaters: addressesToString(packet.addresses.digipeaters),
+    information: Buffer.from(packet.information.bytes),
+    informationHex: packet.information.hex,
+    informationAscii: packet.information.ascii
+  }
+
+  /* Log the parsed packet to Redis */
+  redis.xAdd('aprs:packets', '*', event)
+}
+
+function addressesToString(addresses: AX25_Address[]): string {
+  return addresses.map(addressToString).join(',')
+}
+
+function addressToString(address: AX25_Address): string {
+  return address.ssid === 0 ? address.callsign : `${address.callsign}-${address.ssid}`
 }
