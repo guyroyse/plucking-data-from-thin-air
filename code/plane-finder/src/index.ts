@@ -5,7 +5,7 @@ import { Command } from 'commander'
 import { createClient as createRedisClient } from 'redis'
 import { createClient as createSBS1_Client, SBS1_Message } from 'sbs1'
 
-import { AircraftJSON } from './types/aircraft-status'
+import { AircraftJSON } from './types/aircraft-status.js'
 
 /* Set up the command line interface */
 const program = new Command()

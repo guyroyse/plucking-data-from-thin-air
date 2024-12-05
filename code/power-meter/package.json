@@ -4,12 +4,15 @@
   "author": "Guy Royse <guy@guyroyse.com> (http://guyroyse.com/)",
   "license": "MIT",
   "type": "module",
+  "files": [
+    "dist"
+  ],
   "bin": {
     "power-meter": "./dist/index.js"
   },
   "scripts": {
     "dev": "vite-node src/index.ts",
-    "build": "tsc && npm install --global"
+    "build": "tsc && npm pack && npm install -g ./power-meter-1.0.0.tgz"
   },
   "dependencies": {
     "chalk": "^5.3.0",

@@ -1,5 +1,5 @@
 import Optional from '@guyroyse/optional'
-import { parseAX25_Addresses, AX25_AddressField } from './ax25-address'
+import { parseAX25_Addresses, AX25_AddressField } from './ax25-address.js'
 
 const CONTROL_FIELD = 0x03
 const PROTOCOL_ID = 0xf0

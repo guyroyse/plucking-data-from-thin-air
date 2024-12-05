@@ -5,9 +5,9 @@ import { Command } from 'commander'
 import { createClient } from 'redis'
 import { Socket } from 'net'
 
-import { parseAPRS_Packet, APRS_Packet } from './aprs'
-import { parseKISS_Packet } from './kiss'
-import { AX25_Address } from './ax25-address'
+import { parseAPRS_Packet, APRS_Packet } from './aprs.js'
+import { parseKISS_Packet } from './kiss.js'
+import { AX25_Address } from './ax25-address.js'
 
 /* Set up the command line interface */
 const program = new Command()
