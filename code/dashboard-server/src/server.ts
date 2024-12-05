@@ -1,19 +1,19 @@
 import cors from 'cors'
 import express, { Express } from 'express'
-import { createClient } from 'redis'
 
-const redisOptions = {
-  url: 'redis://localhost:6379'
-}
+/* Import the routers */
+import { router as powerMeterRouter } from './power-meter-routes'
+import { router as planeFinderRouter } from './plane-finder-routes'
+import { router as packetWatcherRouter } from './packet-watcher-routes'
+import { router as payloadSnifferRouter } from './payload-sniffer-routes'
 
-const redis = await createClient(redisOptions)
-  .on('error', error => console.error('Redis Client Error:', error))
-  .connect()
-
+/* Create the Express app */
 const app: Express = express()
 
+/* Use JSON */
 app.use(express.json())
 
+/* Enable CORS */
 app.use(cors())
 app.use(function (_req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')
@@ -21,34 +21,18 @@ app.use(function (_req, res, next) {
   next()
 })
 
+/* Home route with a status message */
 app.get('/', (_req, res) => {
   res.json({ staus: 'OK' })
 })
 
-app.get('/power-meter', async (_req, res) => {
-  /* Get the start and stop times for the last minute */
-  const now = Math.floor(Date.now() / 1000) * 1000
-  const then = now - 1000 * 60
+/* Use all the routers */
+app.use('/power-meter', powerMeterRouter)
+app.use('/plane-finder', planeFinderRouter)
+app.use('/packet-watcher', packetWatcherRouter)
+app.use('/payload-sniffer', payloadSnifferRouter)
 
-  /* Get the data for the last minute */
-  const data = await redis.ts.mRangeWithLabels(then, now, 'type=signalStrength')
-
-  const results = data
-    .flatMap((item: any) => {
-      const frequency = Number(item.labels.frequency)
-      return item.samples.map((sample: any) => {
-        const time = Math.floor((sample.timestamp - then) / 1000)
-        const power = sample.value
-        return { time, frequency, power }
-      })
-    })
-    .sort((a: any, b: any) => {
-      return a.time - b.time || a.frequency - b.frequency
-    })
-
-  res.json(results)
-})
-
+/* Start the server */
 const server = app.listen(8080, () => {
   console.log('Server is running on port 8080')
 })
