@@ -10,7 +10,7 @@ import { AircraftJSON } from './types/aircraft-status.js'
 /* Set up the command line interface */
 const program = new Command()
   .name('plane-finder')
-  .description('A simple tool to read the SBS1 messages  of rtl_adsb and write it to JSON in Redis')
+  .description('A simple tool to read the SBS1 messages of dump-1090 and write them to JSON in Redis')
   .version('1.0.0')
   .option('-r, --redis <url>', 'Redis URL to connect to', 'redis://localhost:6379')
   .option('-h, --host <host>', 'Host running service publishing SBS-1 messages', 'localhost')

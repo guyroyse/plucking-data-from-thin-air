@@ -5,14 +5,14 @@ import { Command } from 'commander'
 import { createClient } from 'redis'
 import { Socket } from 'net'
 
-import { parseAPRS_Packet, APRS_Packet } from './aprs.js'
+import { parseAPRS_Packet } from './aprs.js'
 import { parseKISS_Packet } from './kiss.js'
 import { AX25_Address } from './ax25-address.js'
 
 /* Set up the command line interface */
 const program = new Command()
   .name('plane-finder')
-  .description('A simple tool to read the SBS1 messages  of rtl_adsb and write it to JSON in Redis')
+  .description('A simple tool to read APRS packets from Direwolf and log them to an event stream in Redis')
   .version('1.0.0')
   .option('-r, --redis <url>', 'Redis URL to connect to', 'redis://localhost:6379')
   .option('-h, --host <host>', 'Host running the KISS service', '127.0.0.1')
