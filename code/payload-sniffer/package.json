@@ -8,7 +8,7 @@
     "dist"
   ],
   "bin": {
-    "power-meter": "./dist/index.js"
+    "payload-sniffer": "./dist/index.js"
   },
   "scripts": {
     "dev": "vite-node src/index.ts",

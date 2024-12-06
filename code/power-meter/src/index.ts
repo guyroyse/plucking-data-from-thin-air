@@ -52,7 +52,7 @@ async function processLine(line: string) {
     const key = `power:${frequency}`
 
     /* Write the signal strength to Redis */
-    redis.ts.add(key, timestamp, signalStrength, {
+    await redis.ts.add(key, timestamp, signalStrength, {
       LABELS: { frequency, type: 'signalStrength' },
       RETENTION: 60 * 60 * 1000
     })

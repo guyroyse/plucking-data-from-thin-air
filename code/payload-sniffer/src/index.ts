@@ -27,16 +27,17 @@ const redis = await createClient(redisOptions)
 /* Read stdin forever */
 async function main() {
   for await (const line of createInterface({ input: process.stdin })) {
-    processLine(line)
+    await processLine(line)
   }
 }
 
 /* Process a single line of JSON from rtl_433 */
-function processLine(line: string) {
+async function processLine(line: string) {
   console.log(chalk.yellow('Processing line'), line)
 
   /* Parse the JSON */
   const data = JSON.parse(line)
+  delete data.time
   for (const key in data) {
     data[key] = data[key].toString()
   }
@@ -45,7 +46,7 @@ function processLine(line: string) {
 
   /* Write it to an event stream matching the device model */
   const key = `rtl_433:${data.model}`
-  redis.xAdd(key, '*', data)
+  await redis.xAdd(key, '*', data)
 
   /* Log that we did a thing */
   console.log(`Adding event for model ${chalk.green(model)} to stream ${chalk.green(key)}`)
