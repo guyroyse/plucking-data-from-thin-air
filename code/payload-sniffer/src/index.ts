@@ -45,9 +45,9 @@ async function processLine(line: string) {
   const model = data.model
 
   /* Write it to an event stream matching the device model */
-  const key = `rtl_433:${data.model}`
-  await redis.xAdd(key, '*', data)
+  redis.xAdd(`rtl_433:${data.model}`, '*', data)
+  await redis.sAdd('rtl_433:models', model)
 
   /* Log that we did a thing */
-  console.log(`Adding event for model ${chalk.green(model)} to stream ${chalk.green(key)}`)
+  console.log(`Adding event for model ${chalk.green(model)} to stream.`)
 }

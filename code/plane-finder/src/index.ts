@@ -64,18 +64,18 @@ function processMessage(message: SBS1_Message) {
   }
 
   /* Fields that may be present */
-  if (message.callsign !== null) json.callsign = message.callsign.trim()
-  if (message.altitude !== null) json.altitude = message.altitude
-  if (message.ground_speed !== null) json.groundSpeed = message.ground_speed
-  if (message.track !== null) json.track = message.track
-  if (message.lat !== null) json.latitude = message.lat
-  if (message.lon !== null) json.longitude = message.lon
-  if (message.vertical_rate !== null) json.verticalRate = message.vertical_rate
-  if (message.squawk !== null) json.squawk = message.squawk
-  if (message.alert !== null) json.alert = message.alert
-  if (message.emergency !== null) json.emergency = message.emergency
-  if (message.spi !== null) json.specialPositionIndicator = message.spi
-  if (message.is_on_ground !== null) json.isOnGround = message.is_on_ground
+  if (isNotNullish(message.callsign)) json.callsign = message.callsign!.trim()
+  if (isNotNullish(message.altitude)) json.altitude = message.altitude!
+  if (isNotNullish(message.ground_speed)) json.groundSpeed = message.ground_speed!
+  if (isNotNullish(message.track)) json.track = message.track!
+  if (isNotNullish(message.lat)) json.latitude = message.lat!
+  if (isNotNullish(message.lon)) json.longitude = message.lon!
+  if (isNotNullish(message.vertical_rate)) json.verticalRate = message.vertical_rate!
+  if (isNotNullish(message.squawk)) json.squawk = message.squawk!
+  if (isNotNullish(message.alert)) json.alert = message.alert!
+  if (isNotNullish(message.emergency)) json.emergency = message.emergency!
+  if (isNotNullish(message.spi)) json.specialPositionIndicator = message.spi!
+  if (isNotNullish(message.is_on_ground)) json.isOnGround = message.is_on_ground!
 
   /* Write the JSON to Redis with an expiration of 5 minutes */
   const key = `aircraft:${json.icaoId}`
@@ -90,4 +90,8 @@ function toEpochMilliseconds(dateString: string, timeString: string): number {
   if (!dateString || !timeString) return 0
   const date = new Date(`${dateString.replaceAll('/', '-')}T${timeString}`)
   return date.getTime()
+}
+
+function isNotNullish(value: unknown): boolean {
+  return value !== null && value !== undefined
 }
