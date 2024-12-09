@@ -1,0 +1,43 @@
+<html>
+  <head>
+    <title>Weather Conditions</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" href="/favicon.svg" type="image/x-icon" />
+    <script src="weather.ts" type="module" defer></script>
+  </head>
+  <body class="flex flex-col w-full text-xl px-48 py-48 items-center">
+
+    <h1 class="text-center text-4xl font-bold mb-8">Current Weather Conditions</h1>
+
+    <label class="pb-2">Select a device</label>
+    <select class="border-2 rounded-md w-1/4 text-center text-lg p-1 mb-12" id="devices" style="appearance: none;">
+      <option selected value>-- None --</option>
+    </select>
+
+    <table class="table-auto text-left text-mono text-2xl w-1/3">
+      <tbody>
+        <tr class="flex flex-row items-center border-b-2 border-redis-light-gray">
+          <th class="flex-shrink px-4 py-1">&#127777;</th>
+          <td class="text-left text-xl">Temperature</td>
+          <td class="flex-grow text-right px-2 text-lg" id="temperature"></td>
+        </tr>
+        <tr class="flex flex-row items-center border-b-2 border-redis-light-gray">
+          <th class="flex-shrink px-4 py-1">&#128167;</th>
+          <td class="text-left text-xl">Humidity</td>
+          <td class="flex-grow text-right px-2 text-lg" id="humidity"></td>
+        </tr>
+        <tr class="flex flex-row items-center border-b-2 border-redis-light-gray">
+          <th class="flex-shrink px-4 py-1">&#128168;</th>
+          <td class="text-left text-xl">Wind</td>
+          <td class="flex-grow text-right px-2 text-lg" id="wind"></td>
+        </tr>
+        <tr class="flex flex-row items-center">
+          <th class="flex-shrink px-4 py-1">&#127783;</th>
+          <td class="text-left text-xl">Rainfall</td>
+          <td class="flex-grow text-right px-2 text-lg" id="rainfall"></td>
+        </tr>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>
