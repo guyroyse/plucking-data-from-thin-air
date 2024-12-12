@@ -1,0 +1,3 @@
+- Install direwolf
+- See the packets
+- Run client and look at the packets in Redis

@@ -1,0 +1,5 @@
+- Install rtl_433
+- Run it and see what we can see
+- Pipe it into Redis
+- Look at the data in Redis
+- See what the weather station is reporting

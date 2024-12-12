@@ -1,0 +1,2 @@
+- Compile and run power meter tool
+- Look at the time series in Redis
