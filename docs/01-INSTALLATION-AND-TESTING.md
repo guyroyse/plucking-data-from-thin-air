@@ -1,4 +1,6 @@
-# Installing the software-defined radio
+# Installion and testing yrou software-defined radio
+
+Physcially installing your software-defined radio is super easy. Just attach a cable and an antenna to the SMA connector on one end and shove the USB end into your laptop. Details on the antenna bit will be covered a bit later. For now, just plug in the SDR.
 
 ## Installing the RTL-SDR drivers
 
@@ -56,11 +58,15 @@ Hooray! Your drivers are working. Press Ctrl-C to stop and go to the next step.
 
 ## Listening to the weather forecase
 
-Now that we have and SDR installed, we're going to use the SDR to listen to the weather radio!
+Now that we have an SDR installed, we're going to use the SDR to listen to the weather radio!
 
-First things first, hook up an antenna to that radio. In the U.S., weather radio transmits between 162.400 MHz and 162.550 MHz. Here's the frequencies for [Ohio](images/ohio-weather-radio-map.png). So, we want an antenna to match that. A quarter of a wavelength at that range frequency would be about 18 inches long. So, extend an antenna to about that length.
+First things first, hook up an antenna to that radio. Set it up vertically, like in the picture below. This particular style of antenna is called a dipole.
 
-You'll also need software asd for that and we're going to use SDRangel. Go to https://www.sdrangel.org/, click the big button labeled **Free Download**, and download a version for your platform. Once it's installed, run it.
+![](images/vertical-antenna.jpg)
+
+In the U.S., NOAA weather radio transmits on channels between 162.400 MHz and 162.550 MHz which have a wavelength of about 6 feet. Ideally, we want each leg of our dipole to be about 1/4 of that, or 18 inches. So extend the legs accordingly. But, don't worry. It doesn't need to be perfect and your guesstimate will do just fine.
+
+You'll also need software. We're going to use SDRangel. Go to https://www.sdrangel.org/, click the big button labeled **Free Download**, and download a version for your platform. Once it's installed, run it.
 
 ### Connect to the SDR
 
@@ -82,11 +88,11 @@ You should immediately see some activity in the other window, which displays you
 
 ![](images/sdr-angel-empty-waterfall.png)
 
-Asjust the tuner in the first window to a frequency that is actually transmitting something. In Sandusky, the frequency is 162.400 MHZ. You should see a signal.
+Adjust the tuner in the first window to a frequency that is actually transmitting something. You can find the specific frequency that NOAA broasdcasts on in your area using [this map](https://www.weather.gov/nwr/Maps) on their website. If you are in a large metropolitan area, it's usually 162.550 MHZ. As soon as you do, you should see a signal in the waterfall.
 
 ![](images/sdr-angel-waterfall.png)
 
-To actually listen to signal, you need to open a demodulator. Do that by clicking the icon below on the control panel.
+To actually listen to that signal, you need to open a demodulator. Do that by clicking the icon below on the control panel.
 
 ![](images/sdr-angel-open-demodulator.png)
 

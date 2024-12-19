@@ -12,7 +12,7 @@ However, there are some tools that you should set up _before_ you come. And, som
 
 This demo uses a software-defined radio. Despite the use of the word _software_ in its name, software-defined radio is actually a hardware device. So, you'll need to buy an SDR and an antenna to do this workshop. No worries, SDRs are fairly inexpensive.
 
-Here's the load-out I like to use. It includes the SDR dongle and an a small selection of antennas that will work with it.
+Here's the load-out I like to use. It includes the SDR dongle and a small selection of antennas that will work with it.
 
 - RTL SDR kit: https://www.amazon.com/RTL-SDR-Blog-RTL2832U-Software-Defined/dp/B0CD7558GT/
 
@@ -28,7 +28,7 @@ Technically, you could install these dependencies during the workshop, but there
 
 #### Installing NPM packages
 
-In the code folder there are folders for several tools. We could install a massive pile of packages over conference wifi, or we could do it before we arrive. Go into each folder—`dashboard-client` through `power-meter`—and run:
+In the code folder there are folders for several tools. We could install a massive pile of NPM packages over conference wifi, or we could do it before we arrive. Go into each folder—`dashboard-client` through `power-meter`—and run:
 
 ```bash
 npm install
