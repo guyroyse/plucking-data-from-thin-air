@@ -39,6 +39,7 @@ The dashboard server also is hard-coded to listen on port `8080`. If that port i
 To start the server run the following:
 
 ```bash
+npm install
 npm run build
 npm run start
 ```
@@ -71,6 +72,7 @@ By default, the client connects to the server on port `8080` and listens to web 
 Hopefully you didn't have to do any of the above and can, instead, simply run the following commands:
 
 ```bash
+npm install
 npm run build
 npm run preview
 ```
@@ -95,4 +97,4 @@ At the bottom left, click on the CLI symbol the looks like `>_ CLI`. This will, 
 PING
 ```
 
-It should respond with `"PONG"` and everything is up and running.
+It should respond with `"PONG"` and if it does, everything is up and running.
