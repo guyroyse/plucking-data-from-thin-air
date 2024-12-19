@@ -1,3 +1,5 @@
+import { DEVICE_LIST_URL, PAYLOAD_SNIFFER_URL } from './config'
+
 const deviceSelect = document.getElementById('devices') as HTMLSelectElement
 const temperatureElement = document.getElementById('temperature') as HTMLTableCellElement
 const humidityElement = document.getElementById('humidity') as HTMLTableCellElement
@@ -14,7 +16,7 @@ type WeatherData = {
 
 async function loadModels(): Promise<void> {
   /* Get the list of devices from the server */
-  const modelResponse = await fetch('http://localhost:8080/payload-sniffer/models')
+  const modelResponse = await fetch(DEVICE_LIST_URL)
   const devices = (await modelResponse.json()) as string[]
 
   /* Add the devices to the dropdown */
@@ -35,7 +37,7 @@ async function loadWeatherData(): Promise<WeatherData> {
   const device = deviceSelect.value
 
   /* Get the latest payload from the server */
-  const payloadResponse = await fetch(`http://localhost:8080/payload-sniffer/${device}`)
+  const payloadResponse = await fetch(`${PAYLOAD_SNIFFER_URL}/${device}`)
   const payload = await payloadResponse.json()
 
   /* Places for the data to go */

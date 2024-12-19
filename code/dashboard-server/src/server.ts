@@ -23,7 +23,7 @@ app.use(function (_req, res, next) {
 
 /* Home route with a status message */
 app.get('/', (_req, res) => {
-  res.json({ staus: 'OK' })
+  res.json({ status: 'OK' })
 })
 
 /* Use all the routers */

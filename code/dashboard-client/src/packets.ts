@@ -1,10 +1,12 @@
+import { PACKET_WATCHER_URL } from './config'
+
 const handle = setInterval(async () => {
   /* Get the table body */
   const table = document.querySelector('#packets')
   if (!table) return
 
   /* Get the packets from the server */
-  const response = await fetch('http://localhost:8080/packet-watcher')
+  const response = await fetch(PACKET_WATCHER_URL)
   const packets = await response.json()
 
   /* If there are no packets, return */

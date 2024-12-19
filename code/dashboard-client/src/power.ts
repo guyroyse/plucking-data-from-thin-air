@@ -1,5 +1,7 @@
 import * as d3 from 'd3'
 
+import { POWER_METER_URL } from './config'
+
 type PowerEntry = {
   time: number
   frequency: number
@@ -22,7 +24,7 @@ const svg = d3
   .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
 /* Read the data from the server */
-const data = (await d3.json('http://localhost:8080/power-meter')) as PowerEntry[]
+const data = (await d3.json(POWER_METER_URL)) as PowerEntry[]
 
 /* Get the ranges for the data */
 const minPower = d3.min(data, d => d.power) as number
@@ -71,6 +73,6 @@ function drawRectangles(data: PowerEntry[]) {
 }
 
 setInterval(async () => {
-  const data = (await d3.json('http://localhost:8080/power-meter')) as PowerEntry[]
+  const data = (await d3.json(POWER_METER_URL)) as PowerEntry[]
   drawRectangles(data)
 }, 1000)

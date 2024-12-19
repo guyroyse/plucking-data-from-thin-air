@@ -1,6 +1,8 @@
 import 'leaflet/dist/leaflet.css'
 import L, { tooltip } from 'leaflet'
 
+import { PLANE_FINDER_URL } from './config'
+
 /* Create the icons we'll use  */
 const homeIcon: L.Icon = L.icon({ iconUrl: 'icons/home.png', iconSize: [16, 16] })
 const planeIcons: L.Icon[] = rangeInclusive(0, 23).map(i =>
@@ -41,7 +43,7 @@ navigator.geolocation.getCurrentPosition((position: GeolocationPosition) => {
 
 /* Set a timer to update the plane markers every coupld seconds */
 const handle = setInterval(async () => {
-  const response = await fetch('http://localhost:8080/plane-finder')
+  const response = await fetch(PLANE_FINDER_URL)
   const planes = await response.json()
 
   /* Add and update the plane markers */
