@@ -6,6 +6,10 @@ The first, `rtl_power`, comes bundled with the RTL SDR drivers you installed ear
 
 The other, `power-meter` is located in the `code/power-meter` folder. It takes the output of `rtl_power` and puts it into a timeseries in Redis.
 
+## Setting up the antenna
+
+Broadcast FM radio stations, like the NOAA radio stations, broadcast with their antennas arranged vertically. So, keep your antenna in the same orientation. However, the frequency is lower and you'll need to extend each leg to about 2-1/2 feet for ideal reception.
+
 ## Running rtl_power
 
 Let's run `rtl_power` and grab the signal strengths for the FM broadcast radio band which goes from 88 MHz to 108 MHz.
@@ -62,7 +66,7 @@ rtl_power -f 88M:108M:200k -i 1 | power-meter
 If you are not running Redis locally, you'll need to specify it using `-r`:
 
 ```bash
-rtl_power -f 88M:108M:200k -i 1 | power-meter -r redis://my.redis.server:1234
+rtl_power -f 88M:108M:200k -i 1 | power-meter -r redis://username:password@my.redis.server:1234
 ```
 
 Regardless of how you kick this off, this will start shoving data into Redis.

@@ -1,4 +1,0 @@
-- Install dump1090
-- Poke the ports
-- Compile and run the app
-- Look at the aircraft in Redis
