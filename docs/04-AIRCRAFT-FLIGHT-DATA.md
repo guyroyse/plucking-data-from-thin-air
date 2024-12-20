@@ -157,7 +157,7 @@ Added aircraft to Redis: A5628C
 Added aircraft to Redis: A55B7A
 ```
 
-## Viewing aircraft on the dashbaord
+## Viewing aircraft data
 
 You can look at the JSON documents with Redis Insight. They'll be in keys like `aircraft:A55B7A`. Go ahead and do that. Click the little refresh icon to see if the data changes.
 
