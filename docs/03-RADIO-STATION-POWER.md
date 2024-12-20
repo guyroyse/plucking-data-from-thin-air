@@ -80,3 +80,9 @@ You should see a bunch of numbers. Let's try it form the workbench instead. Clic
 Redis Insight will try its best to make this a pretty chart but there is a lot of data and a lot of samples. It's really too complex for it to render well.
 
 So, we need to use the dashboard. Go ahead and browse to http://localhost:8000/power.html. You should see clearly darker bars where local radio stations are.
+
+If you're feeling extra ambitious, make a note of some of the frequencies. Then, go ahead and shut down `rtl_power` and use SDRangel to listen to some of the radio stations. You'll need to select Broadcast FM Demodulator instead of the NFM Demodulator to do this. And, you'll need to lower the _decimation_ to sample the full bandwidth of a broadcast FM signal.
+
+![](images/sdr-angel-decimation.png)
+
+If you're wondering what decimation is, it increases and decreases the sample rate that SDRangel uses when pulling data off the SDR. The lower the value, the more bandwidth that can be observed but the harder the software needs to work to process it. A value of 1 grabs the maximum bandwidth, 2 grabs half of that, 4 grabs a quarter, etc.
