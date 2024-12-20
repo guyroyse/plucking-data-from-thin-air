@@ -2,7 +2,7 @@
 
 We'll be using two tools to do this: `rtl_433` and `payload-sniffer`.
 
-`rtl_433` is a command-line tool that we'll need to install. It picks up and decodeds data packets transmitted by numerous devices in numerous formats and writes it to disk or `stdout` in various formats. These devices include things such as car key fobs and tire pressure sensors, security system and home automation devices, utility meters, and weather stations.
+`rtl_433` is a command-line tool that we'll need to install. It picks up and decodes data packets transmitted by numerous devices in numerous formats and writes it to disk or `stdout` in various formats. These devices include things such as car key fobs and tire pressure sensors, security system and home automation devices, utility meters, and weather stations.
 
 `payload-sniffer` is a tool that I wrote that will consume JSON data piped in from `rtl_433` and put it into and an event stream in Redis for each unique device detected.
 
@@ -13,7 +13,7 @@ The data the rtl_433 can pick up is on a small selection of frequencies so the l
 - **315 MHz** is commonly used for automotive things like key fobs and tire sensors.
 - **345 MHz** is commonly used for security systems.
 - **433 MHz** is used for all sorts of consumer IoT devices like home automation gear, doorbells, and weather stations.
-- **915 MHz** is where utility meters, industrial and commercial sensors, and some smart home stuff exist. You'll also find LoRa and Meshtatstic signals here.
+- **915 MHz** is where utility meters, industrial and commercial sensors, and some smart home stuff exist. You'll also find LoRa and Meshtastic signals here.
 
 Ideally, each leg will be 1/4 of a wavelength for the frequency you want. The formula to calculate wavelength in meters is to divide the speed of light in meters per second by the frequency in seconds. For example, the speed of light is roughly 300 million m/s. 150 MHz is 150 million cycles per second. So:
 
@@ -35,7 +35,7 @@ sudo apt-get install rtl-433
 
 ### Installing on Mac
 
-It's a fairly easy install using homebrow:
+It's a fairly easy install using homebrew:
 
 ```bash
 brew install rtl_433
@@ -88,7 +88,7 @@ npm install
 npm run build
 ```
 
-This will transpile and install the `payload-sniffer` tool globaly on your system. To run it you need to run `rtl_433` and pipe the output into `payload-sniffer`:
+This will transpile and install the `payload-sniffer` tool globally on your system. To run it you need to run `rtl_433` and pipe the output into `payload-sniffer`:
 
 ```bash
 rtl_433 -g 50 -f 433M -F json | payload-sniffer
@@ -116,4 +116,4 @@ Processing line {"time" : "2024-12-20 15:53:39", "model" : "Acurite-5n1", "messa
 
 `payload-sniffer` populates several keys in Redis including a set containing every device that has been detected and an event stream for each device. Look in the `rtl_433:models` key to see all the devices detected so far. The names in here are used in the keyname for the event stream. For the weather station, for example, there is a event stream named `rtl_433:Acurite-5n1`. If you look in one of these streams, you'll see the data that was sent.
 
-The dashboard has a view specifically for viewing the weather data. Go to it at http://localhost:8000/weather.html and select the Acurite-5n1 device to view the current weather conditions as reported by my weather station.
+The dashboard has a view specifically for viewing the weather data. Go to it at http://localhost:8000/weather.html and select the `Acurite-5n1` device to view the current weather conditions as reported by my weather station.

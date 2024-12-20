@@ -4,7 +4,7 @@ We'll be using two tools to do this: `dump1090` and `plane-finder`.
 
 `dump1090` is a command-line tool that talks to your RTL SDR and listens for aircraft transponder broadcasts on 1090 MHz. It can display these on your terminal and expose them as raw data on network ports.
 
-`plane-finder` is a tool that I wrote that will consume the raw data exposed by `dump1090` and place it in Redis where the dashbaord can consume it and put it on a map.
+`plane-finder` is a tool that I wrote that will consume the raw data exposed by `dump1090` and place it in Redis where the dashboard can consume it and put it on a map.
 
 ## Setting up the antenna
 

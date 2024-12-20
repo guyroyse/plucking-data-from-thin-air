@@ -13,7 +13,7 @@ Before we get started gathering data, you will need to install this web applicat
 
 ## Installing the dashboard
 
-The dashbaord is made of a client and a server. We'll start the server, and then the client.
+The dashboard is made of a client and a server. We'll start the server, and then the client.
 
 ### Running the dashboard server
 

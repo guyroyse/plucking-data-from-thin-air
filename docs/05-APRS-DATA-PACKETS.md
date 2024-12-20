@@ -4,13 +4,13 @@ We'll be using three tools to do this: `rtl_fm`, `direwolf`, and `packet-watcher
 
 `rtl_fm` is a command-line tool that comes with the RTL SDR drivers. It uses your SDR to receive data and then demodulates it to audio signals that it can then write to a file or to `stdout`. We're using it to get the audio for APRS packets.
 
-`direwolf` is a software modem that takes audio input from eitehr soundcards or from `stdin` and decodes AX.25 and APRS packets in that audio. It will also publish these decoded packets on sockets using both the KISS and AGW protocols. We'll be using KISS because it's simpler.
+`direwolf` is a software modem that takes audio input from either sound cards or from `stdin` and decodes AX.25 and APRS packets in that audio. It will also publish these decoded packets on sockets using both the KISS and AGW protocols. We'll be using KISS because it's simpler.
 
 `packet-watcher` is a tool that I wrote that will consume the raw packet data that `direwolf` publishes on port `8001`, parse out the useful bits, and put it into and event stream in Redis where we can see and manipulate it.
 
 ## Setting up the antenna
 
-APRS traffic in the U.S. is transmitted at 144.39 MHz in the 2-meter amanteur radio band using a naroow-band FM modulation. This mode normally has the antenna arranged vertically. The frequency of 144.29 MHz works best with each leg of your antenna being at about 20 inches in length.
+APRS traffic in the U.S. is transmitted at 144.39 MHz in the 2-meter amateur radio band using a narrow-band FM modulation. This mode normally has the antenna arranged vertically. The frequency of 144.29 MHz works best with each leg of your antenna being at about 20 inches in length.
 
 ## Installing direwolf
 
@@ -95,7 +95,7 @@ npm install
 npm run build
 ```
 
-This will transpile and install the `packet-watcher` tool globaly on your system. Just run it and it will connect to `direwolf`:
+This will transpile and install the `packet-watcher` tool globally on your system. Just run it and it will connect to `direwolf`:
 
 ```bash
 packet-watcher

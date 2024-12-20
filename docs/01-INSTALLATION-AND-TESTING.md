@@ -1,6 +1,6 @@
-# Installion and testing yrou software-defined radio
+# Installation and testing your software-defined radio
 
-Physcially installing your software-defined radio is super easy. Just attach a cable and an antenna to the SMA connector on one end and shove the USB end into your laptop. Details on the antenna bit will be covered a bit later. For now, just plug in the SDR.
+Physically installing your software-defined radio is super easy. Just attach a cable and an antenna to the SMA connector on one end and shove the USB end into your laptop. Details on the antenna bit will be covered a bit later. For now, just plug in the SDR.
 
 ## Installing the RTL-SDR drivers
 
@@ -56,7 +56,7 @@ lost at least 12 bytes
 
 Hooray! Your drivers are working. Press Ctrl-C to stop and go to the next step.
 
-## Listening to the weather forecase
+## Listening to the weather forecast
 
 Now that we have an SDR installed, we're going to use the SDR to listen to the weather radio!
 
@@ -88,7 +88,7 @@ You should immediately see some activity in the other window, which displays you
 
 ![](images/sdr-angel-empty-waterfall.png)
 
-Adjust the tuner in the first window to a frequency that is actually transmitting something. You can find the specific frequency that NOAA broasdcasts on in your area using [this map](https://www.weather.gov/nwr/Maps) on their website. If you are in a large metropolitan area, it's usually 162.550 MHZ. As soon as you do, you should see a signal in the waterfall.
+Adjust the tuner in the first window to a frequency that is actually transmitting something. You can find the specific frequency that NOAA broadcasts on in your area using [this map](https://www.weather.gov/nwr/Maps) on their website. If you are in a large metropolitan area, it's usually 162.550 MHZ. As soon as you do, you should see a signal in the waterfall.
 
 ![](images/sdr-angel-waterfall.png)
 
