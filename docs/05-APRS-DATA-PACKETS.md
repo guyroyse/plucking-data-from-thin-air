@@ -1,6 +1,6 @@
 # Decode APRS packets sent by amateur radio operators
 
-We'll be using threes tools to do this: `rtl_fm`, `direwolf`, and `packet-watcher`.
+We'll be using three tools to do this: `rtl_fm`, `direwolf`, and `packet-watcher`.
 
 `rtl_fm` is a command-line tool that comes with the RTL SDR drivers. It uses your SDR to receive data and then demodulates it to audio signals that it can then write to a file or to `stdout`. We're using it to get the audio for APRS packets.
 
