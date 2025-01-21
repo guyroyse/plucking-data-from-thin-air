@@ -16,7 +16,7 @@ type SignalValue = {
 const program = new Command()
   .name('power-meter')
   .description('A simple tool to read the output of rtl_power and write it to a Redis timeseries')
-  .version('1.0.0')
+  .version('1.0.1')
   .option('-r, --redis <url>', 'Redis URL to connect to', 'redis://localhost:6379')
   .action(main)
   .parse()
@@ -66,6 +66,9 @@ function* yieldSignalValues(line: string): Generator<SignalValue> {
   /* Define the types in the arrays to appease the TypeScript gods */
   type DateTimeAndSignalData = [string, string, ...string[]]
   type SignalData = [number, number, number, number, ...number[]]
+
+  /* Fix windows nan values from rtl_power.exe */
+  line = line.replace(/nan/gi, "0.0")
 
   /* Pull out the date, time, and signal data */
   const [date, time, ...signalData] = line.split(',').map(s => s.trim()) as DateTimeAndSignalData
