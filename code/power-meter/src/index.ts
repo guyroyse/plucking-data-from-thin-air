@@ -67,6 +67,7 @@ function* yieldSignalValues(line: string): Generator<SignalValue> {
   type DateTimeAndSignalData = [string, string, ...string[]]
   type SignalData = [number, number, number, number, ...number[]]
 
+  /* Fix windows nan values from rtl_power.exe */
   line = line.replace(/nan/gi, "0.0")
 
   /* Pull out the date, time, and signal data */
